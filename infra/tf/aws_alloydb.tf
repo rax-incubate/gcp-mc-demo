@@ -111,7 +111,7 @@ resource "aws_network_interface" "env2_alloydb" {
 }
 
 resource "aws_eip" "env2_alloydb" {
-  vpc = true
+  domain = "vpc"
 }
 
 resource "aws_eip_association" "env2_alloydb" {

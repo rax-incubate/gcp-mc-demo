@@ -61,7 +61,7 @@ resource "aws_network_interface" "env2_bastion" {
 }
 
 resource "aws_eip" "env2_bastion" {
-  vpc = true
+  domain = "vpc"
 }
 
 resource "aws_eip_association" "env2_bastion" {
