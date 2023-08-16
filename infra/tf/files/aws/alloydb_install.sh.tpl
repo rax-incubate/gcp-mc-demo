@@ -58,6 +58,6 @@ psql -h $${ALLOYDB_PRIMARY_IP} -U $${MYAPP_USER} imdb -c "CREATE TABLE title_bas
 
 
 mkdir -p /home/ubuntu/tmp
-cd /home/ubuntu/tmp && gsutil cp gs://gcp-multi-cloud-demo/title.basics.tsv.gz .
+cd /home/ubuntu/tmp && gsutil cp gs://gcp-mc-demo/myapp/title.basics.tsv.gz .
 gzip -d title.basics.tsv.gz
 psql -h $${ALLOYDB_PRIMARY_IP} -U $${MYAPP_USER} imdb -c "\copy title_basics FROM '/home/ubuntu/tmp/title.basics.tsv'"
