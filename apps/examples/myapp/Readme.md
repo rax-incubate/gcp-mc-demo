@@ -1,6 +1,6 @@
 # Build and push the image
 
-MYAPP_REPO=us-east1-docker.pkg.dev/gcp-multi-cloud-demo/myapp/myapp:1.8
+MYAPP_REPO=us-east1-docker.pkg.dev/gcp-mc-demo-prime/myapp/myapp:1.10
 
 docker build .  -t ${MYAPP_REPO}
 

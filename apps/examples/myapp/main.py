@@ -17,12 +17,18 @@ def hello_world():
     db_user = os.environ.get("DB_USER", "imdb")
     db_pwd = os.environ.get("DB_PWD", "imdb")
 
-    conn = psycopg2.connect(
-        database=db_name, user=db_user, password=db_pwd, host=db_host, port= db_host_port
-        )
-    
-    cursor = conn.cursor()
-    cursor.execute("SELECT * from " + db_table  + " LIMIT 100")
+    try:
+        conn = psycopg2.connect(
+            database=db_name, user=db_user, password=db_pwd, host=db_host, port= db_host_port
+            )
+    except OperationalError as err:
+        print(err)
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * from " + db_table  + " LIMIT 100")
+    except Exception as err:
+        print(err)
     rows = cursor.fetchall()
     conn.commit()
     conn.close()
