@@ -77,7 +77,7 @@ psql -h $${ALLOYDB_PRIMARY_IP} -U root template1 -c "ALTER USER $${MYAPP_USER} C
 export PGPASSWORD=$${MYAPP_USER_PWD}
 psql -h $${ALLOYDB_PRIMARY_IP} -U $${MYAPP_USER} template1 -c "CREATE DATABASE imdb"
 psql -h $${ALLOYDB_PRIMARY_IP} -U $${MYAPP_USER} imdb -c "CREATE TABLE title_basics(tconst varchar(12), title_type varchar(80), primary_title varchar(512), original_title varchar(512), is_adult boolean,start_year smallint, end_year smallint, runtime_minutes int, genres varchar(80))"
-gsutil cp gs://gcp-mc-demo1/myapp/test-data/title.basics.tsv.gz /home/ubuntu/
+gsutil cp gs://gcp-mc-demo/myapp/title.basics.tsv.gz /home/ubuntu/
 gunzip /home/ubuntu/title.basics.tsv.gz
 psql -h $${ALLOYDB_PRIMARY_IP} -U $${MYAPP_USER} imdb -c "\copy title_basics FROM '/home/ubuntu/title.basics.tsv'"
 EOF
