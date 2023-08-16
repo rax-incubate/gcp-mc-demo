@@ -125,7 +125,7 @@ variable "env1_gcp_bastion_ssh_keys" {
 
 variable "env1_allow_ssh_ranges" {
   description = "List of IP ranges to allow SSH from"
-  type        = list
+  type        = list(any)
   default     = ["0.0.0.0/0"]
 }
 
@@ -235,7 +235,7 @@ variable "env2_aws_bastion_ssh_keys" {
 
 variable "env2_allow_ssh_ranges" {
   description = "List of IP ranges to allow SSH from"
-  type        = list
+  type        = list(any)
   default     = ["0.0.0.0/0"]
 }
 

@@ -21,7 +21,7 @@ resource "aws_security_group" "env2_bastion" {
   name        = "env2_bastion"
   description = "Env2 bastion allow SSH"
   vpc_id      = module.vpc.vpc_id
-  tags = var.env2_aws_res_tags
+  tags        = var.env2_aws_res_tags
 }
 
 resource "aws_security_group_rule" "bastion_egress" {
@@ -91,8 +91,8 @@ resource "aws_instance" "env2_bastion" {
     network_interface_id = aws_network_interface.env2_bastion.id
     device_index         = 0
   }
-  key_name = var.env2_aws_bastion_ssh_keys.name
-  tags     = merge(var.env2_aws_res_tags, local.env2_bastion)
+  key_name         = var.env2_aws_bastion_ssh_keys.name
+  tags             = merge(var.env2_aws_res_tags, local.env2_bastion)
   user_data_base64 = base64encode(data.template_file.bastion_install.rendered)
 
 }

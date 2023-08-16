@@ -27,8 +27,7 @@ data "aws_iam_policy_document" "anthos_api_assume_document" {
 }
 
 resource "aws_iam_role" "anthos_api_role" {
-  name = "anthos-api-role"
-
+  name               = "anthos-api-role"
   description        = "IAM role for Anthos service"
   assume_role_policy = data.aws_iam_policy_document.anthos_api_assume_document.json
 

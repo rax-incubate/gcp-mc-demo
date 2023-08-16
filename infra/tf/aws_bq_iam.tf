@@ -1,7 +1,7 @@
 resource "aws_iam_policy" "bq_omni" {
-    name = "bq-omni-connection-policy"
+  name = "bq-omni-connection-policy"
 
-    policy = <<-EOF
+  policy = <<-EOF
             {
                 "Version": "2012-10-17",
                 "Statement": [
@@ -27,10 +27,10 @@ resource "aws_iam_policy" "bq_omni" {
 
 
 resource "aws_iam_role" "bq_omni" {
-    name                 = "bq-omni-connection"
-    max_session_duration = 43200
+  name                 = "bq-omni-connection"
+  max_session_duration = 43200
 
-    assume_role_policy = <<-EOF
+  assume_role_policy = <<-EOF
         {
         "Version": "2012-10-17",
         "Statement": [
@@ -52,8 +52,8 @@ resource "aws_iam_role" "bq_omni" {
 }
 
 resource "aws_iam_role_policy_attachment" "bq_omni" {
-    role       = aws_iam_role.bq_omni.name
-    policy_arn = aws_iam_policy.bq_omni.arn
+  role       = aws_iam_role.bq_omni.name
+  policy_arn = aws_iam_policy.bq_omni.arn
 }
 
 

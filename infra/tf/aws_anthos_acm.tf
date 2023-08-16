@@ -12,7 +12,7 @@ resource "google_gke_hub_feature_membership" "env2_feature_member" {
       git {
         sync_repo   = var.env2_sync_repo
         secret_type = "none"
-        
+
         # Set the following if you have private git repos. Also remove the secret_type from above.
         # sync_branch = var.env2_sync_branch
         # policy_dir  = var.env2_policy_dir

@@ -69,5 +69,5 @@ output "env2_db_prim_ip" {
 }
 
 output "bigquery_omni_role" {
-    value = aws_iam_role.bq_omni.arn
+  value = aws_iam_role.bq_omni.arn
 }

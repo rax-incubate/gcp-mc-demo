@@ -28,9 +28,9 @@ resource "google_compute_firewall" "env1_allow_bastion_icmp" {
 resource "google_compute_firewall" "env1_allow_bastion_icmp_egress" {
   project = var.env1_gcp_project
 
-  name    = "env1-bastion-allow-icmp-egress"
+  name      = "env1-bastion-allow-icmp-egress"
   direction = "EGRESS"
-  network = google_compute_network.env1_gcp_vpc.name
+  network   = google_compute_network.env1_gcp_vpc.name
   allow {
     protocol = "icmp"
   }
