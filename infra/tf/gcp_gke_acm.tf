@@ -29,9 +29,11 @@ resource "google_gke_hub_feature_membership" "feature_member" {
       source_format = "hierarchy"
       git {
         sync_repo   = var.env1_sync_repo
-        sync_branch = var.env1_sync_branch
-        policy_dir  = var.env1_policy_dir
-        secret_type = "token"
+        secret_type = "none"
+        # Set the following if you have private git repos. Also remove the secret_type from above.
+        # sync_branch = var.env1_sync_branch
+        # policy_dir  = var.env1_policy_dir
+        # secret_type = "token"
       }
     }
   }
