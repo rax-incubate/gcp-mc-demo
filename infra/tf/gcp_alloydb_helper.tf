@@ -68,7 +68,7 @@ resource "google_compute_instance" "env1_alloy_helper" {
 #! /bin/bash
 sudo apt-get update
 sudo apt-get install -y postgresql-client
-export PGPASSWORD=dhfj4ifjfjfjfjfajsfs48DDFgwwr
+export PGPASSWORD=${var.env1_gcp_alloydb_initial_pwd}
 export ALLOYDB_PRIMARY_IP=${google_alloydb_instance.env1_db_primary_instance.ip_address}
 export MYAPP_USER=${var.env1_alloydb_myapp_user}
 export MYAPP_USER_PWD=${var.env1_alloydb_myapp_pwd}
