@@ -40,6 +40,7 @@ resource "aws_security_group_rule" "alloy_icmp" {
 
 resource "aws_security_group_rule" "alloy_egress" {
   type              = "egress"
+  description       = "Egress from all"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
@@ -50,6 +51,7 @@ resource "aws_security_group_rule" "alloy_egress" {
 
 resource "aws_security_group_rule" "alloy_bastion_ssh" {
   type                     = "ingress"
+  description              = "SSH from bastion"
   from_port                = 22
   to_port                  = 22
   protocol                 = "tcp"
@@ -59,6 +61,7 @@ resource "aws_security_group_rule" "alloy_bastion_ssh" {
 
 resource "aws_security_group_rule" "alloyssh_all" {
   type              = "ingress"
+  description       = "SSH from allocated ranges"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
@@ -67,7 +70,9 @@ resource "aws_security_group_rule" "alloyssh_all" {
 }
 
 resource "aws_security_group_rule" "alloy_bastion_postgres" {
-  type                     = "ingress"
+  type        = "ingress"
+  description = "Postgres from Bastion"
+
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
@@ -77,31 +82,33 @@ resource "aws_security_group_rule" "alloy_bastion_postgres" {
 
 # By default, the Google Anthos module creates many security groups for the worker nodes
 # We use this data source to edit them. The alternative is to create a custom security group. 
-data "aws_security_groups" "anthos_np" {
-  tags = {
-    Name = "anthos-cp"
-  }
-}
+# data "aws_security_groups" "anthos_np" {
+#   tags = {
+#     Name = "anthos-cp"
+#   }
+# }
 
-resource "aws_security_group_rule" "alloy_anthos_np_postgres" {
-  for_each                 = toset(data.aws_security_groups.anthos_np.ids)
-  type                     = "ingress"
-  from_port                = 5432
-  to_port                  = 5432
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.env2_alloydb.id
-  source_security_group_id = each.value
-}
+# resource "aws_security_group_rule" "alloy_anthos_np_postgres" {
+#   for_each                 = toset(data.aws_security_groups.anthos_np.ids)
+#   description              = "Allow Anthos node pools to access alloydb"
+#   type                     = "ingress"
+#   from_port                = 5432
+#   to_port                  = 5432
+#   protocol                 = "tcp"
+#   security_group_id        = aws_security_group.env2_alloydb.id
+#   source_security_group_id = each.value
+# }
 
-resource "aws_security_group_rule" "alloy_anthos_np_postgres_egress" {
-  for_each                 = toset(data.aws_security_groups.anthos_np.ids)
-  type                     = "egress"
-  from_port                = 0
-  to_port                  = 65535
-  protocol                 = "tcp"
-  security_group_id        = each.value
-  source_security_group_id = aws_security_group.env2_alloydb.id
-}
+# resource "aws_security_group_rule" "alloy_anthos_np_postgres_egress" {
+#   for_each                 = toset(data.aws_security_groups.anthos_np.ids)
+#   description              = "Allow Alloydb egress to Anthos node pools "
+#   type                     = "egress"
+#   from_port                = 0
+#   to_port                  = 65535
+#   protocol                 = "tcp"
+#   security_group_id        = each.value
+#   source_security_group_id = aws_security_group.env2_alloydb.id
+# }
 
 
 resource "aws_network_interface" "env2_alloydb" {
