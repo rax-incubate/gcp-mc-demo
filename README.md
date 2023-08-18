@@ -544,7 +544,7 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
 	--cluster=$CLUSTER_NAME \
 	--region=$CLUSTER_REGION \
 	--project=$PROJECT_ID
-```
+	```
 
 ## Extras
 
@@ -749,8 +749,8 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
 	  psql -h${ALLOYDB_PRIMARY_IP}  -U postgres -c "ALTER USER ${MYAPP_USER} CREATEDB"
 	
 	  ```
-
-  	- Setup the table using the newly create user. Note, PGPASSWORD is now using the above password for the new user.
+	
+	- Setup the table using the newly create user. Note, PGPASSWORD is now using the above password for the new user.
   
 	  ```
 	  ALLOYDB_PRIMARY_IP=127.0.0.1
@@ -767,7 +767,7 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
 	  
 	  # Verify
 	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER imdb -c "SELECT * FROM title_basics LIMIT 5"
-  ```
+  	  ```
 
 
 
