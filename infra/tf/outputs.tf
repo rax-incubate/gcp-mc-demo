@@ -67,7 +67,3 @@ output "env2_db_prim_public_ip" {
 output "env2_db_prim_ip" {
   value = aws_instance.env2_alloydb.private_ip
 }
-
-output "bigquery_omni_role" {
-  value = aws_iam_role.bq_omni.arn
-}
