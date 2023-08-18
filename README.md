@@ -337,10 +337,14 @@ getting 1 RepoSync and RootSync from projects/gcp-mc-demo01/locations/global/mem
        ```
        export GH_USERNAME=<your GH USER>
        export ACM_PAT_TOKEN=<your GH TOKEN>
-       
        CM_NS=config-management-system
+       ```
+       
+       ```
        kubectl get namespace | grep -q "^$CM_NS" || kubectl create namespace $CM_NS
+       ```
                 
+       ```
        kubectl create secret generic git-creds \
           --namespace="config-management-system" \
           --from-literal=username=$GH_USERNAME \
@@ -356,12 +360,21 @@ getting 1 RepoSync and RootSync from projects/gcp-mc-demo01/locations/global/mem
        ```
        
       - Re-apply Terraform
+      ```
+      terraform apply
+      ```
 
   - Assuming you have not changed the git repo from the example, you should have the Wordpress pods running.
 
   ```
   kubectl -n wp get pods
-  kubectl -n wp get service 
+  ```
+  
+  ```
+  kubectl -n wp get service
+  ```
+  
+  ```
   kubectl proxy --port 8888 &
   curl http://127.0.0.1:8889/api/v1/namespaces/wp/services/wordpress/proxy/wp-admin/install.php
   ```
@@ -384,7 +397,9 @@ In this section, we will make sure our custom application works. This applicatio
   
   ```
   cd ${MULTI_CLOUD_DEMO_GIT_REPO}/infra/tf
+  ```
   
+  ```
   export ALLOYDB_PRIMARY_IP=$(terraform output -raw env1_db_prim_ip)
   export ALLOYDB_PRIMARY_PORT=5432
   export ALLOYDB_SCHEMA=imdb
@@ -392,7 +407,9 @@ In this section, we will make sure our custom application works. This applicatio
   export ALLOYDB_USER=myapp
   export ALLOYDB_USER_PWD=$(grep env1_alloydb_myapp_pwd terraform.tfvars  | cut -f 4 -d ' ' |  tr -d '"')
   export K8S_NAMESPACE=myapp
+  ```
 
+  ```
   kubectl create secret generic myapp-credentials \
           --namespace=$K8S_NAMESPACE \
           --from-literal=db_host=$ALLOYDB_PRIMARY_IP \
@@ -407,6 +424,9 @@ In this section, we will make sure our custom application works. This applicatio
 
   ```
   kubectl -n myapp get pods
+  ```
+  
+  ```
   kubectl -n myapp get service
   ```
 
@@ -414,14 +434,16 @@ In this section, we will make sure our custom application works. This applicatio
   
   ```
   MYAPP_IP=$(kubectl get services -n $K8S_NAMESPACE myapp --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  ```
   
+  ```
   curl http://$MYAPP_IP/run
   ```
   
-  	- Expected output
+  - Expected output
 
-  	```
-  	$ curl http://$MYAPP_IP/run | head
+  ```
+  $ curl http://$MYAPP_IP/run | head
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 10210  100 10210    0     0  38396      0 --:--:-- --:--:-- --:--:-- 39269
@@ -435,10 +457,9 @@ tt0000006,short,Chinese Opium Den,Chinese Opium Den,False,1894,None,1,Short<br>
 tt0000007,short,Corbett and Courtney Before the Kinetograph,Corbett and Courtney Before the Kinetograph,False,1894,None,1,Short,Sport<br>
 tt0000008,short,Edison Kinetoscopic Record of a Sneeze,Edison Kinetoscopic Record of a Sneeze,False,1894,None,1,Documentary,Short<br>
 tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
-	
-	```
+  ```
 
- - Change the kubcelt context to AWS cluster. 
+ - Change the kubectl context to AWS cluster. 
 
  - The core of the applications deployed on AWS is the same as GCP. However, there are some minor differences in the steps.
 
@@ -446,7 +467,9 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
   
   ```
   cd ${MULTI_CLOUD_DEMO_GIT_REPO}/infra/tf
+  ```
   
+  ```
   export ALLOYDB_PRIMARY_IP=$(terraform output -raw env2_db_prim_ip)
   export ALLOYDB_PRIMARY_PORT=5432
   export ALLOYDB_SCHEMA=imdb
@@ -454,7 +477,9 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
   export ALLOYDB_USER=myapp
   export ALLOYDB_USER_PWD=$(grep env2_alloydb_myapp_pwd terraform.tfvars  | cut -f 4 -d ' ' |  tr -d '"')
   export K8S_NAMESPACE=myapp
+  ```
 
+  ```
   kubectl create secret generic myapp-credentials \
             --namespace=$K8S_NAMESPACE \
             --from-literal=db_host=$ALLOYDB_PRIMARY_IP \
@@ -469,7 +494,9 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
   
   ```
   MYAPP_IP=$(kubectl get services -n $K8S_NAMESPACE myapp --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+  ```
   
+  ```
   curl http://$MYAPP_IP/run
   ```
    
@@ -477,17 +504,20 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
 
   ```
   kubectl -n myapp get pods
+  ```
   
+  ```
   kubectl -n myapp get service
   ```
 
   - Access the URL from services. If you face any issues see troubleshooting section
   
   ```
-  MYAPP_IP=$(kubectl get services -n myapp myapp --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')  
+  MYAPP_IP=$(kubectl get services -n myapp myapp --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+  ``` 
   
+  ```
   curl http://$MYAPP_IP/run
-  
   ```
   
  - (Optional) If your Docker repo is private as it will be in most production use-cases, you need to grant access to the image in GCP Artifact registry. You also also use ECR if you want to upload a separate image to AWS repos and use AWS IAM. 
@@ -497,24 +527,32 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
 	 ```
 	 export ACCOUNT_NAME=aws-artifacts
 	 export ARTIFACT_REGION=us-east1
+	 ```
 	 
+	 ```
 	 gcloud iam service-accounts create $ACCOUNT_NAME --project ${PROJECT_ID}
-	
+	 ```
+	 
+	 ```
 	 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 	  --member serviceAccount:${ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
 	  --role roles/artifactregistry.reader \
 	  --project ${PROJECT_ID}
+	 ```
 	
+	 ```
 	 gcloud iam service-accounts keys create aws-registry-access-key.json \
 	  --iam-account ${ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
 	  --project ${PROJECT_ID}
+	 ```
 	
+	 ```
 	 kubectl -n myapp create secret docker-registry registry-secret \
 	  --docker-server=${ARTIFACT_REGION}-docker.pkg.dev \
 	  --docker-username=_json_key \
 	  --docker-email=${ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
 	  --docker-password="$(cat aws-registry-access-key.json)"
-	  ```
+	 ```
 
 ## Troubleshooting 
 
@@ -544,19 +582,29 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
 	```
 	export CLUSTER_NAME=env-db01
 	export CLUSTER_REGION=us-east4
+	```
+	
+	```
 	gcloud alloydb users list \
 	--cluster=$CLUSTER_NAME \
 	--region=$CLUSTER_REGION \
 	--project=$PROJECT_ID
+	```
 		
+	```
 	export ALLOY_USER=root
 	export ALLOY_USER_PWD=dhfj4ifjfjfjfjfajsfs48DDFgwwr
+	```
+	
+	```
 	gcloud alloydb users create $ALLOY_USER \
 	--password= $ALLOY_USER_PWD \
 	--cluster=$CLUSTER_NAME \
 	--region=$CLUSTER_REGION \
 	--project=$PROJECT_ID
+	```
 		
+	```
 	gcloud alloydb users set-superuser $ALLOY_USER \
 	--superuser=true \
 	--cluster=$CLUSTER_NAME \
@@ -588,11 +636,17 @@ This uses the same demo provided by Google [https://github.com/GoogleCloudPlatfo
  
   ```
   gcloud iam service-accounts create ${ALLOYDB_USER_GSA_NAME} --display-name=${ALLOYDB_USER_GSA_NAME}
+  ```
   
+  ```
   gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:${ALLOYDB_USER_GSA_ID} --role=roles/alloydb.client
+  ```
   
+  ```
   gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:${ALLOYDB_USER_GSA_ID} --role=roles/secretmanager.secretAccessor
+  ```
   
+  ```
   gcloud iam service-accounts add-iam-policy-binding ${ALLOYDB_USER_GSA_ID} \
     --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/${CARTSERVICE_KSA_NAME}]" \
     --role roles/iam.workloadIdentityUser
@@ -609,7 +663,9 @@ This uses the same demo provided by Google [https://github.com/GoogleCloudPlatfo
 
   ```
   cd $MULTI_CLOUD_DEMO_GIT_REPO/apps/examples/hs/
+  ```
 
+  ```
   sed -i "s/PROJECT_ID_VALUE/${PROJECT_ID}/g" resources.yaml
   sed -i "s/ALLOYDB_PRIMARY_IP_VALUE/${ALLOYDB_PRIMARY_IP}/g"resources.yaml
   sed -i "s/ALLOYDB_USER_GSA_ID/${ALLOYDB_USER_GSA_ID}/g" resources.yaml
@@ -634,6 +690,9 @@ This uses the same demo provided by Google [https://github.com/GoogleCloudPlatfo
   
   ```
   MYAPP_IP=$(kubectl get services -n hs frontend-external --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  ```
+  
+  ```
   curl http://$MYAPP_IP/
   ```
 
@@ -646,7 +705,9 @@ This is optional and only do this if you want VPN between the two Cloud regions.
   
   ```
   mv gcp_aws_vpn.tf.optional gcp_aws_vpn.tf
+  ```
   
+  ```
   terraform apply
   ```
   
@@ -655,14 +716,19 @@ This is optional and only do this if you want VPN between the two Cloud regions.
   ```
   export ENV1_BASTION_IP=$(terraform output -raw env1_bastion_ip)
   export ENV2_BASTION_PRIV_IP=$(terraform output -raw env2_bastion_private_ip)
+  ```
+  
+  ```
   ssh ubuntu@$ENV1_BASTION_IP curl -s -m 3 -v telnet://$ENV2_BASTION_PRIV_IP:22 2>&1 |grep Connected
   ```
   
   - Note VPN incurs a bit of cost and so if you don't need it, delete it
     
   ```
-  mv gcp_aws_vpn.tf gcp_aws_vpn.tf.optional
+  mv gcp_aws_vpn.tf.optional gcp_aws_vpn.tf 
+  ```
   
+  ```
   terraform apply
   ```
 
@@ -720,9 +786,21 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
 		
 	  ``` 
 	  cd ${MULTI_CLOUD_DEMO_GIT_REPO}/infra/tf
+	  ```
+	  
+	  ```
 	  export PGPASSWORD=$(grep env1_gcp_alloydb_initial_pwd terraform.tfvars  | cut -f 4 -d ' ' |  tr -d '"')
+	  ```
+	  
+	  ```
 	  export ALLOYDB_PRIMARY_IP=$(terraform output -raw env1_db_prim_ip)
+	  ```
+	  
+	  ```
 	  export MYAPP_USER=myapp
+	  ```
+	  
+	  ```
 	  export MYAPP_USER_PWD=$(grep env1_alloydb_myapp_pwd terraform.tfvars  | cut -f 4 -d ' ' |  tr -d '"')
 	  ```
 		
@@ -730,7 +808,13 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
 		
 	  ```
 	  export ENV1_BASTION_IP=$(terraform output -raw env1_bastion_ip)
+	  ```
+	  
+	  ```
 	  psql -h ${ALLOYDB_PRIMARY_IP} -U root -c "CREATE USER ${MYAPP_USER} WITH LOGIN ENCRYPTED PASSWORD '"${MYAPP_USER_PWD}"'"
+	  ```
+	  
+	  ```
 	  psql -h $ALLOYDB_PRIMARY_IP -U root -c "ALTER USER myapp CREATEDB"
 	  ```
 	
@@ -738,12 +822,24 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
 	  
 	  ```
 	  export PGPASSWORD=$(grep env1_alloydb_myapp_pwd terraform.tfvars  | cut -f 4 -d ' ' |  tr -d '"')
+	  ```
 	  
+	  ```
 	  psql -h $ALLOYDB_PRIMARY_IP -U myapp template1
-	  psql -h $ALLOYDB_PRIMARY_IP -U myapp -c "CREATE DATABASE imdb"
-	  psql -h $ALLOYDB_PRIMARY_IP -U myapp -c "CREATE TABLE title_basics(tconst varchar(12), title_type varchar(80), primary_title varchar(512), original_title varchar(512), is_adult boolean,start_year smallint, end_year smallint, runtime_minutes int, genres varchar(80))"
-	  psql -h $ALLOYDB_PRIMARY_IP -U myapp -c "\copy title_basics FROM '/home/ubuntu/title.basics.tsv'"
+	  ```
 	  
+	  ```
+	  psql -h $ALLOYDB_PRIMARY_IP -U myapp -c "CREATE DATABASE imdb"
+	  ```
+	  
+	  ```
+	  psql -h $ALLOYDB_PRIMARY_IP -U myapp -c "CREATE TABLE title_basics(tconst varchar(12), title_type varchar(80), primary_title varchar(512), original_title varchar(512), is_adult boolean,start_year smallint, end_year smallint, runtime_minutes int, genres varchar(80))"
+	  ```
+	  ```
+	  psql -h $ALLOYDB_PRIMARY_IP -U myapp -c "\copy title_basics FROM '/home/ubuntu/title.basics.tsv'"
+	  ```
+	  
+	  ```
 	  # Verify this worked
 	  psql -h $ALLOYDB_PRIMARY_IP -U myapp imdb -c "SELECT * FROM title_basics LIMIT 5"
 	  ```
@@ -760,12 +856,18 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
   
 	  ```
 	  export MYAPP_USER=myapp
+	  ```
+	  
+	  ```
 	  export MYAPP_USER_PWD =$(grep env2_alloydb_myapp_pwd terraform.tfvars  | cut -f 4 -d ' ' |  tr -d '"')
+	  ```
 	  
+	  ```
 	  psql -h ${ALLOYDB_PRIMARY_IP} -U postgres -c "CREATE USER ${MYAPP_USER} WITH LOGIN ENCRYPTED PASSWORD '"${MYAPP_USER_PWD}"'"
+	  ```
 	  
+	  ```
 	  psql -h${ALLOYDB_PRIMARY_IP}  -U postgres -c "ALTER USER ${MYAPP_USER} CREATEDB"
-	
 	  ```
 	
 	- Setup the table using the newly create user. Note, PGPASSWORD is now using the above password for the new user.
@@ -775,19 +877,36 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
 	  export MYAPP_USER=myapp
 	  export MYAPP_USER_PWD =$(grep env2_alloydb_myapp_pwd terraform.tfvars  | cut -f 4 -d ' ' |  tr -d '"')
 	  export PGPASSWORD=$MYAPP_USER_PWD
+	  ```
 	  
+	  ```
 	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER template1 -c "CREATE DATABASE imdb"
-	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER imdb -c "CREATE TABLE title_basics(tconst varchar(12), title_type varchar(80), primary_title varchar(512), original_title varchar(512), is_adult boolean,start_year smallint, end_year smallint, runtime_minutes int, genres varchar(80))"
-	  mkdir -p /home/ubuntu/tmp 
-	  cd /home/ubuntu/tmp && gsutil cp gs://gcp-multi-cloud-demo/title.basics.tsv.gz .
-	  gzip -d title.basics.tsv.gz
-	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER imdb -c "\copy title_basics FROM '/home/ubuntu/tmp/title.basics.tsv'"
+	  ```
 	  
+	  ```
+	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER imdb -c "CREATE TABLE title_basics(tconst varchar(12), title_type varchar(80), primary_title varchar(512), original_title varchar(512), is_adult boolean,start_year smallint, end_year smallint, runtime_minutes int, genres varchar(80))"
+	  ```
+	  
+	  ```
+	  mkdir -p /home/ubuntu/tmp 
+	  ```
+	  
+	  ```
+	  cd /home/ubuntu/tmp && gsutil cp gs://gcp-multi-cloud-demo/title.basics.tsv.gz .
+	  ```
+	  
+	  ```
+	  gzip -d title.basics.tsv.gz
+	  ```
+	  
+	  ```
+	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER imdb -c "\copy title_basics FROM '/home/ubuntu/tmp/title.basics.tsv'"
+	  ```
+	  
+	  ```
 	  # Verify
 	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER imdb -c "SELECT * FROM title_basics LIMIT 5"
   	  ```
-
-
 
 # REFERENCES
  
