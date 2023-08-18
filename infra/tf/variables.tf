@@ -350,10 +350,3 @@ variable "env2_policy_dir" {
   description = "The directory in the repo branch that contains the app resources."
   default     = "apps/env2"
 }
-
-## Env2 BQ
-
-variable "env2_bq_data_bucket" {
-  type        = string
-  description = "S3 bucket used with BQ"
-}
