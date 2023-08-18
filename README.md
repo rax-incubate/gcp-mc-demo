@@ -200,15 +200,13 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
   - Run terraform init, plan and apply
 
   ```
-  export TF_VAR_env1_gcp_project=$PROJECT_ID
-  
-  terraform init
-  
-  terraform plan
-  
-  terraform apply
+  export TF_VAR_env1_gcp_project=$PROJECT_ID && terraform init
   ```
 
+  ```
+  terraform apply
+  ```
+  
  - This provisions the infrastructure needed on AWS and GCP. This will take about 25-30 minutes. AlloyDB takes about 15 mins and Anthos on AWS can take some time as well. Go grab a beverage :-) 
  
  - Let's do some checks to make sure it worked.
@@ -217,23 +215,26 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
   
   ```
   export ENV1_CLUSTER_LOCATION=$(terraform output -raw env1_cluster_location)
-  
   export ENV1_CLUSTER_NAME=$(terraform output -raw env1_cluster_name)
+  ```
   
+  ```
   gcloud container clusters get-credentials $ENV1_CLUSTER_NAME --location $ENV1_CLUSTER_LOCATION --project $PROJECT_ID
+  ```
   
+  ```
   kubectl get nodes
   
   ```
+  
   - Sample output
-	
-	 ```
-	 $ kubectl get nodes
-	 NAME                                        STATUS   ROLES    AGE   VERSION
-	 gke-env1-clu01-env1-pool-01-f57ef4fe-325x   Ready    <none>   16m   v1.26.5-gke.1200
-	 gke-env1-clu01-env1-pool-01-f57ef4fe-74z8   Ready    <none>   16m   v1.26.5-gke.1200
-    
-    ```
+  
+  ```
+  $ kubectl get nodes
+  NAME                                        STATUS   ROLES    AGE   VERSION
+  gke-env1-clu01-env1-pool-01-f57ef4fe-325x   Ready    <none>   16m   v1.26.5-gke.1200
+  gke-env1-clu01-env1-pool-01-f57ef4fe-74z8   Ready    <none>   16m   v1.26.5-gke.1200
+  ```
   
    - (Optional) - If you are doing this using a private Git repo you will need to provide secrets for authentication, perform the following steps. 
 
@@ -263,18 +264,17 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
        ```
        
        - Re-apply Terraform
-             
- 
+       
+       ```
+       terraform apply
+       ```        
  
   - Assuming you have not changed the git repo from the example, you should have the Wordpress pods running. You can also test the service using Kubectl proxy.
 
   ```
   kubectl -n wp get pods
-  
   kubectl -n wp get service 
-  
   kubectl proxy --port 8888 &
-  
   curl http://127.0.0.1:8888/api/v1/namespaces/wp/services/wordpress/proxy/wp-admin/install.php
   ```
   
