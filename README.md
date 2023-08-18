@@ -223,15 +223,17 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
   gcloud container clusters get-credentials $ENV1_CLUSTER_NAME --location $ENV1_CLUSTER_LOCATION --project $PROJECT_ID
   
   kubectl get nodes
+  
   ```
-  	- Sample output
+  - Sample output
 	
-	  	```
-	  	$ kubectl get nodes
-	NAME                                        STATUS   ROLES    AGE   VERSION
-	gke-env1-clu01-env1-pool-01-f57ef4fe-325x   Ready    <none>   16m   v1.26.5-gke.1200
-	gke-env1-clu01-env1-pool-01-f57ef4fe-74z8   Ready    <none>   16m   v1.26.5-gke.1200
-		```
+	 ```
+	 $ kubectl get nodes
+	 NAME                                        STATUS   ROLES    AGE   VERSION
+	 gke-env1-clu01-env1-pool-01-f57ef4fe-325x   Ready    <none>   16m   v1.26.5-gke.1200
+	 gke-env1-clu01-env1-pool-01-f57ef4fe-74z8   Ready    <none>   16m   v1.26.5-gke.1200
+    
+    ```
   
    - (Optional) - If you are doing this using a private Git repo you will need to provide secrets for authentication, perform the following steps. 
 
