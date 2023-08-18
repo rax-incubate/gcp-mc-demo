@@ -294,10 +294,10 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
   gcloud alpha anthos config sync repo list --project $PROJECT_ID
   ```
   
-  	- Sample Output. Note you might see the AWS cluster begin with stalled and change.
+  - Sample Output. Note you might see the AWS cluster begin with stalled and change.
   
-  	```
-  	$ gcloud alpha anthos config sync repo list --project $PROJECT_ID
+  ```
+  gcloud alpha anthos config sync repo list --project $PROJECT_ID
 getting 1 RepoSync and RootSync from projects/gcp-mc-demo01/locations/global/memberships/env2-cluster
 getting 1 RepoSync and RootSync from projects/gcp-mc-demo01/locations/global/memberships/membership-hub-env1-clu01
 ┌──────────────────────────────────────────────────────────────────────────┬───────┬────────┬─────────┬───────┬─────────┬─────────────┐
@@ -306,7 +306,7 @@ getting 1 RepoSync and RootSync from projects/gcp-mc-demo01/locations/global/mem
 │ https://github.com/rax-incubate/gcp-multi-cloud-demo.git//apps/env2@main │ 1     │ 1      │ 0       │ 0     │ 1       │ 0           │
 │ https://github.com/rax-incubate/gcp-multi-cloud-demo.git//apps/env1@main │ 1     │ 1      │ 0       │ 0     │ 0       │ 0           │
 └──────────────────────────────────────────────────────────────────────────┴───────┴────────┴─────────┴───────┴─────────┴─────────────┘
-  	```
+  ```
 
 
   - Access the **AWS** cluster and ensure two nodes show up here. 
@@ -319,7 +319,6 @@ getting 1 RepoSync and RootSync from projects/gcp-mc-demo01/locations/global/mem
   ```
   gcloud container aws clusters list --project $PROJECT_ID --location $ENV2_CLUSTER_LOCATION
   ```
-  
 
   ```
   gcloud container aws clusters get-credentials $ENV2_CLUSTER_NAME --location $ENV2_CLUSTER_LOCATION --project $PROJECT_ID
