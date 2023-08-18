@@ -26,6 +26,7 @@ resource "aws_security_group" "env2_bastion" {
 
 resource "aws_security_group_rule" "bastion_egress" {
   type              = "egress"
+  description       = "Egress from all"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
@@ -35,7 +36,8 @@ resource "aws_security_group_rule" "bastion_egress" {
 }
 
 resource "aws_security_group_rule" "bastion_ssh" {
-  type              = "ingress"
+  type        = "ingress"
+  description = "SSH from allowed ranges"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
@@ -44,6 +46,7 @@ resource "aws_security_group_rule" "bastion_ssh" {
 }
 
 resource "aws_security_group_rule" "bastion_icmp" {
+  description = "ICMP from all"
   type              = "ingress"
   from_port         = 0
   to_port           = 0
