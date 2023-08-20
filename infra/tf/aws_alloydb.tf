@@ -81,7 +81,7 @@ resource "aws_security_group_rule" "alloy_bastion_postgres" {
 }
 
 # By default, the Google Anthos module creates many security groups for the worker nodes
-# We use this data source to edit them. The alternative is to create a custom security group. 
+# We can use this data source to edit them. The alternative is to create a custom security group. 
 # data "aws_security_groups" "anthos_np" {
 #   tags = {
 #     Name = "anthos-cp"
