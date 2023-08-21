@@ -177,7 +177,7 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
   - Enable services on the project. Terraform does this as well but some of this takes time and so best to do it before you run Terraform.
   
   ```
-  for gcp_service in "cloudresourcemanager.googleapis.com" "iamcredentials.googleapis.com" "iam.googleapis.com" "monitoring.googleapis.com" "container.googleapis.com" "servicenetworking.googleapis.com" "artifactregistry.googleapis.com" "containersecurity.googleapis.com" "osconfig.googleapis.com" "alloydb.googleapis.com" "compute.googleapis.com" "gkehub.googleapis.com" "anthosconfigmanagement.googleapis.com" "gkemulticloud.googleapis.com" "gkeconnect.googleapis.com" "bigqueryconnection.googleapis.com" "anthos.googleapis.com" "connectgateway.googleapis.com"; do  gcloud services enable $gcp_service; done
+  for gcp_service in "cloudresourcemanager.googleapis.com" "iamcredentials.googleapis.com" "iam.googleapis.com" "monitoring.googleapis.com" "container.googleapis.com" "servicenetworking.googleapis.com" "artifactregistry.googleapis.com" "containersecurity.googleapis.com" "osconfig.googleapis.com" "alloydb.googleapis.com" "compute.googleapis.com" "gkehub.googleapis.com" "anthosconfigmanagement.googleapis.com" "gkemulticloud.googleapis.com" "gkeconnect.googleapis.com" "bigqueryconnection.googleapis.com" "anthos.googleapis.com" "connectgateway.googleapis.com" " analyticshub.googleapis.com"; do  gcloud services enable $gcp_service; done
   ```   
 
 ## Provision GCP and AWS Infrastructure
