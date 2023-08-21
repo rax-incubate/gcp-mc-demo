@@ -6,11 +6,8 @@ metadata:
   name: bqapp
   labels: 
     image_version: "0.4"
-    deploy_version: "0.2"
+    deploy_version: "0.3"
 spec:
-  serviceAccountName: bqappsa
-  nodeSelector:
-    iam.gke.io/gke-metadata-server-enabled: "true"
   replicas: 1
   selector:
     matchLabels:
@@ -20,6 +17,9 @@ spec:
       labels:
         app: bqapp
     spec:
+      serviceAccountName: bqappsa
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
       - name: bqapp
         image: "us-east1-docker.pkg.dev/gcp-mc-demo-prime/myapp/mc-analytics:0.4"
