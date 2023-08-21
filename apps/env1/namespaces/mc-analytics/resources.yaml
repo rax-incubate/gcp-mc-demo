@@ -1,4 +1,5 @@
 apiVersion: apps/v1
+kind: ServiceAccount
 kind: Deployment
 metadata:
   namespace: "mc-analytics"
@@ -7,6 +8,9 @@ metadata:
     image_version: "0.4"
     deploy_version: "0.2"
 spec:
+  serviceAccountName: bqappsa
+  nodeSelector:
+    iam.gke.io/gke-metadata-server-enabled: "true"
   replicas: 1
   selector:
     matchLabels:
