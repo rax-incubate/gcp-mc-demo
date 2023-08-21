@@ -22,7 +22,7 @@ spec:
         iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
       - name: bqapp
-        image: "us-east1-docker.pkg.dev/gcp-mc-demo-prime/myapp/mc-analytics:0.4"
+        image: "us-east1-docker.pkg.dev/gcp-mc-demo-prime/myapp/mc-analytics:0.5"
         ports:
         - containerPort: 8080
         env:
