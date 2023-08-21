@@ -4,8 +4,8 @@ metadata:
   namespace: "mc-analytics"
   name: bqapp
   labels: 
-    image_version: "0.1"
-    deploy_version: "0.1"
+    image_version: "0.2"
+    deploy_version: "0.2"
 spec:
   replicas: 1
   selector:
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: bqapp
-        image: "us-east1-docker.pkg.dev/gcp-mc-demo-prime/myapp/mc-analytics:0.1"
+        image: "us-east1-docker.pkg.dev/gcp-mc-demo-prime/myapp/mc-analytics:0.2"
         ports:
         - containerPort: 8080
         env:
