@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: bqapp
-        image: "us-east1-docker.pkg.dev/gcp-mc-demo-prime/mc-analytics/mc-analytics:0.1"
+        image: "us-east1-docker.pkg.dev/gcp-mc-demo-prime/myapp/mc-analytics:0.1"
         ports:
         - containerPort: 8080
         env:
