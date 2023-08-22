@@ -42,7 +42,7 @@ module "env1_gke" {
   disable_legacy_metadata_endpoints = true
   cluster_autoscaling               = var.env1_gke_cluster_autoscaling
 
-  logging_enabled_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  logging_enabled_components = ["SYSTEM_COMPONENTS", "CONTROLLER_MANAGER", "APISERVER", "WORKLOADS",  "SCHEDULER"]
 
   node_pools = [
     {
