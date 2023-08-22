@@ -85,7 +85,7 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
  
  	- Kubernetes comes next with GKE around 200 USD for this test single cluster with 2 nodes.
 
- 	- Anthos costs will come to 50 USD a month
+ 	- Anthos costs will come to 50 USD a month. Not this is only for the trial of Anthos. You can review [https://cloud.google.com/anthos/pricing/](https://cloud.google.com/anthos/pricing/) for the full details. 
 
  	- The rest are generally low ranging in 10s of USD
 
@@ -102,12 +102,8 @@ This entiring testing infra will cost around 1600 USD if you run this for the **
 # Future areas to explore
 
  - Build replication layer between the two clouds; primary in one cloud, read replicas in another and vice-versa. See [https://cloud.google.com/alloydb/docs/omni/set-up-read-replica](https://cloud.google.com/alloydb/docs/omni/set-up-read-replica)
-
- - Multicloud Analytics - Build an application that runs on GCP using native BQ and a BQ control plan on an Anthos cluster in AWS with data stored in S3
-
  
  - Implement bi-directional sync using `gsutil` with GCS and S3 as the two locations 
-
 
  - Multicloud APIs - Use Apigee to deliver cross cloud API services
 
@@ -1109,4 +1105,8 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
  - [https://cloud.google.com/blog/topics/anthos/using-terraform-to-enable-config-connector-on-a-gke-cluster](https://cloud.google.com/blog/topics/anthos/using-terraform-to-enable-config-connector-on-a-gke-cluster)
   
  - [https://github.com/GoogleCloudPlatform/anthos-samples/tree/main/anthos-multi-cloud/AWS](https://github.com/GoogleCloudPlatform/anthos-samples/tree/main/anthos-multi-cloud/AWS)
+
+ - [https://cloud.google.com/bigquery/docs/query-aws-data](https://cloud.google.com/bigquery/docs/query-aws-data)
+ 
+ - [https://cloud.google.com/anthos/clusters/docs/multi-cloud/aws/how-to/use-workload-identity-aws](https://cloud.google.com/anthos/clusters/docs/multi-cloud/aws/how-to/use-workload-identity-aws)
 
