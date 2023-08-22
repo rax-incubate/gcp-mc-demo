@@ -62,6 +62,7 @@ Here are the slides from the Google Next presentation.
 ![](png/design.png)
 
 
+
 The entire infrastructure for this solution can be deployed using Terraform. There are additional steps required for the application such as Kubernetes secrets which are included in the step-by-step instructions. Here are some notable mentions from the solution deployment.
 
 - AlloyDB OMNI is still in Preview stage. It is a good time to experiment and learn while it moves to a GA stage. 
@@ -388,6 +389,8 @@ getting 1 RepoSync and RootSync from projects/gcp-mc-demo01/locations/global/mem
   
 # Deploy Applications 
 
+## Myapp - Anthos and AlloyDB - GCP 
+
 In this section, we will make sure our custom application works. This application is already deployed using Anthos ACM but we need some additional DB setup and secrets configuration. The application creatively named "myapp" is a simple python APP that talks to AlloyDB table which contains information from the public IMDB database. To get to a working application, few steps are required. 
 	
 
@@ -458,6 +461,9 @@ tt0000007,short,Corbett and Courtney Before the Kinetograph,Corbett and Courtney
 tt0000008,short,Edison Kinetoscopic Record of a Sneeze,Edison Kinetoscopic Record of a Sneeze,False,1894,None,1,Documentary,Short<br>
 tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
   ```
+
+## Myapp - Anthos and AlloyDB - AWS 
+
 
  - Change the kubectl context to AWS cluster. 
 
@@ -554,6 +560,193 @@ tt0000009,movie,Miss Jerry,Miss Jerry,False,1894,None,45,Romance<br>
 	  --docker-password="$(cat aws-registry-access-key.json)"
 	 ```
 
+## Bqapp - Anthos and BigQuery - GCP
+
+ - The GCP side is quite easy as it is a application talking to Bigquery. The application manifests are in `env1/namespaces/mc-analytics/` but we need to create some configuration for this to work.
+
+ - Create the table
+ 
+ ```
+ cd $MULTI_CLOUD_DEMO_GIT_REPO/apps/examples/mc-analytics/data
+ ```
+ 
+ ```
+ bq mk --dataset ${PROJECT_ID}:mcdemogcp
+ ```
+ 
+ ```
+ bq load --source_format=PARQUET mcdemogcp.cities cities.parquet
+ ```
+ 
+ - Test data import
+ 
+ ```
+ bq query --nouse_legacy_sql "SELECT continent, country.name as country_name, cb.array_element as city_name FROM mcdemogcp.cities, UNNEST(country.city.bag) cb"
+ ```
+ 
+ - Create Kubernetes service account
+
+ ```
+ export K8S_NAMESPACE=mc-analytics
+ export BQAPP_GSA_NAME=bqappsa
+ export BQAPP_GSA_ID=${BQAPP_GSA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
+ ```
+
+ ```
+ kubectl create serviceaccount ${BQAPP_GSA_NAME} --namespace ${K8S_NAMESPACE}
+ ```
+ 
+  - Create the GCP service account
+ 
+ ```
+ gcloud iam service-accounts create ${BQAPP_GSA_NAME} --display-name=${BQAPP_GSA_NAME}
+ ```
+ 
+ ```
+ gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:${BQAPP_GSA_ID} --role=roles/bigquery.user
+ ```
+ 
+ ```
+ gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:${BQAPP_GSA_ID} --role=roles/bigquery.dataViewer
+ ```
+
+ ```
+ gcloud iam service-accounts add-iam-policy-binding ${BQAPP_GSA_ID} \
+    --member "serviceAccount:${PROJECT_ID}.svc.id.goog[$K8S_NAMESPACE/${BQAPP_GSA_NAME}]" \
+    --role roles/iam.workloadIdentityUser
+ ```
+  
+
+ - Create Kubernetes secrets. If you changed the dataset name, adjust it here.
+
+ ```
+ kubectl create secret generic bqapp-credentials \
+          --namespace=$K8S_NAMESPACE \
+          --from-literal=bq_dataset_id=mcdemogcp \
+          --from-literal=bq_table_id=cities
+ ```
+ 
+ - Annotate the service account
+ 
+ ```
+ kubectl annotate serviceaccount ${BQAPP_GSA_NAME} \
+    --namespace ${K8S_NAMESPACE} \
+    iam.gke.io/gcp-service-account=${BQAPP_GSA_ID}
+ ```
+  
+  - Restart the deployment
+  
+  ```
+  kubectl rollout restart deployment bqapp -n ${K8S_NAMESPACE}
+  ```
+ 	
+  - Access the URL from services 
+  
+  ```
+  BQAPP_IP=$(kubectl get services -n $K8S_NAMESPACE bqapp --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  ```
+  
+  ```
+  curl http://$BQAPP_IP/run
+  ``` 	
+
+## Bqapp - Anthos and BigQuery - AWS
+
+ - The AWS side is a bit more complicated but the main parts are the same
+
+ - Rename the optional file.
+ 
+ ```
+ mv aws_bq.tf.optional aws_bq.tf
+ ```
+ 
+ - Edit `aws_bq.tf` to set the `env2_bq_data_bucket` to something unique. This is the bucket that will be created in S3 and will be used by Big query's external table.
+ 
+ - Terraform apply.
+ 
+ ```
+ terraform apply
+ ```
+ 
+ - This creates the necessary IAM roles and connections for Big query.
+
+ 
+ - Copy the data file to the s3 bucket
+
+ ```
+ cp $MULTI_CLOUD_DEMO_GIT_REPO/apps/examples/mc-analytics/data/cities.parquet s3://<YOUR BUCKET>/cities.parquet"
+ ```
+ 
+ 
+ - Create the Dataset.
+ 
+ ```
+ bq --location=aws-us-east-1 mk --dataset $PROJECT_ID:mcdemoaws
+ ```
+ 
+ - Edit `$MULTI_CLOUD_DEMO_GIT_REPO/apps/examples/mc-analytics/data/cities_aws.sql` and change the s3 bucket to match what you set above.
+
+ - Create the external table in Big Query.
+
+ ```
+ cat $MULTI_CLOUD_DEMO_GIT_REPO/apps/examples/mc-analytics/data/cities_aws.sql  | bq query --use_legacy_sql=false
+ ```
+ 
+ - Test data import
+ 
+ ```
+ bq query --location=aws-us-east-1 --nouse_legacy_sql "SELECT continent, country.name as country_name, cb.array_element as city_name FROM mcdemoaws.cities, UNNEST(country.city.bag) cb"
+ ```
+
+ - Switch kubectl context to the AWS cluster 
+
+ 
+ - Create Kubernetes service account
+
+ ```
+ export K8S_NAMESPACE=mc-analytics
+ export BQAPP_GSA_NAME=bqappsa
+ export BQAPP_GSA_ID=${BQAPP_GSA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
+ ```
+
+ ```
+ kubectl create serviceaccount ${BQAPP_GSA_NAME} --namespace ${K8S_NAMESPACE}
+ ```
+ 
+ - Create Kubernetes secrets. If you changed the dataset name, adjust it here.
+
+ ```
+ kubectl create secret generic bqapp-credentials \
+          --namespace=$K8S_NAMESPACE \
+          --from-literal=bq_dataset_id=mcdemoaws \
+          --from-literal=bq_table_id=cities
+ ```
+ 
+ - Annotate the service account
+ 
+ ```
+ kubectl annotate serviceaccount ${BQAPP_GSA_NAME} \
+    --namespace ${K8S_NAMESPACE} \
+    iam.gke.io/gcp-service-account=${BQAPP_GSA_ID}
+ ```
+  
+  - Restart the deployment
+  
+  ```
+  kubectl rollout restart deployment bqapp -n ${K8S_NAMESPACE}
+  ```
+ 	
+  - Access the URL from services 
+  
+  ```
+  BQAPP_IP=$(kubectl get services -n myapp myapp --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+  ```
+  
+  ```
+  curl http://$BQAPP_IP/run
+  ``` 	
+
+          
 ## Troubleshooting 
 
  - Anthos config sync issues. Start with `nomos`
