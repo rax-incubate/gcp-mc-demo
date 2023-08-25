@@ -1,5 +1,8 @@
 # gcp-multi-cloud-demo
 
+Presented at ![](png/next-23.jpeg)
+
+
 ## Overview
 
 A multi cloud (AWS and GCP) design using Anthos and Alloy DB. In this article, we will deploy the following to demonstrate the multicloud capabilities of various Google Cloud products. This reference architecture is demonstrated on AWS and GCP but it can easily be extended to Azure,  on premise private cloud  or an edge data center. While this provides, a clear reference architecture for re-use the primary objective is to demostrate the art of the possible and/or a viable starting point for your design choices.  
@@ -54,7 +57,7 @@ Anthos ACM will be used to deploy the Kubernetes manifests which are stored in G
 
 Here are the slides from the Google Next presentation.
 
-[TBC]
+[Availale after Google Next]
 
 
 # Multi Cloud Reference Architecture  
