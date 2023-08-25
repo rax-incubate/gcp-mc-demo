@@ -1100,6 +1100,13 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
 	  psql -h ${ALLOYDB_PRIMARY_IP} -U $MYAPP_USER imdb -c "SELECT * FROM title_basics LIMIT 5"
   	  ```
 
+# CONTRIBUTIONS
+
+Please submit a PR or raise an issue if you have questions.
+
+
+
+
 # REFERENCES
  
  - [https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/blob/master/examples](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/blob/master/examples/)
@@ -1113,3 +1120,7 @@ Note, these steps are provided to detail what is involved in AlloyDB setup on AW
  
  - [https://cloud.google.com/anthos/clusters/docs/multi-cloud/aws/how-to/use-workload-identity-aws](https://cloud.google.com/anthos/clusters/docs/multi-cloud/aws/how-to/use-workload-identity-aws)
 
+
+# DISCLAIMER
+
+THE SAMPLE CODE IS PROVIDED “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL RACKSPACE TECHNOLOGY OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) SUSTAINED BY YOU OR A THIRD PARTY, HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ARISING IN ANY WAY OUT OF THE USE OF THIS SAMPLE CODE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
