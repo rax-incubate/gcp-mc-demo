@@ -59,7 +59,7 @@ Anthos ACM will be used to deploy the Kubernetes manifests which are stored in G
 
 Here are the slides from the Google Next presentation.
 
-[Availale after Google Next]
+[Google Next 2023 Presentation](google-next-presentation.pdf)
 
 # Multi Cloud Reference Architecture  
 
