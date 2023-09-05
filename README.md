@@ -5,21 +5,21 @@ Presented at ![](png/next-23.jpeg)
 
 ## Overview
 
-In this article, we will demonstrate the multicloud capabilities of various Google Cloud products. The reference architecture is build and demonstrated on AWS and GCP but it can easily be extended to Azure,  on premise private cloud  or an edge data center. While this provides, a clear reference architecture for re-use the primary objective is to demonstrate the art of the possible and a viable starting point for your design choices.  
+A multi cloud (AWS and GCP) design using Anthos and Alloy DB. In this article, we will expore the multicloud capabilities of various Google Cloud products and demonstrate the workings using an reference implementation.  The reference architecture is limited to AWS and GCP but it can easily be extended to another cloud like Azure, on premise private cloud or an edge data center setup. We will also explore some interesting ways to leverage the proprietary tools provided by the Cloud Native services in way were you can combine multicloud deisgn with judicious unicloud choices to leverage the benefits of both approaches. While this provides, a clear reference architecture for re-use the primary objective is to demostrate the art of the possible and viable starting point for your design choices.  
 
 We will be covering the following:-
 
- - Sample applications that are deployed across two cloud (AWS, GCP) using a consistent GitOps deployment model delivered by Anthos Config Management (ACM).
+  - Sample applications deployed across two clouds (AWS, GCP) using a consistent GitOps deployment model delivered by Anthos Config Management (ACM).
 
- - A relational database layer using Postgres compatible AlloyDB and AlloyDB Omni.
+  - A relational database layer using Postgres-compatible AlloyDB and AlloyDB Omni.
 
- - A analytics database layer using Big Query and Object storage using Amazon S3.
+  - An analytics database layer using Big Query and Object storage using Amazon S3.
 
- - All necessary cloud-vendor-native constructs like VPC and Load balancers.
+  - All necessary cloud-vendor-native constructs like VPC and Load balancers.
 
- - The lessons we learnt in doing this, what worked well, what doesn't.
+  - The lessons we learnt in doing this, what worked well, and what didn't.
 
- - Step by Step deployment using Terraform, gcloud cli and Kubernetes cli.
+  - Step-by-step deployment using Terraform, gcloud command line utility and Kubernetes command line utility.
 
 From an implementation standpoint, the following Cloud resources are deployed :-
 
@@ -66,41 +66,41 @@ Here are the slides from the Google Next presentation.
 ![](png/design.png)
 
 
-The entire infrastructure for this solution can be deployed using Terraform. There are additional steps required for the application such as Kubernetes secrets which are included in the step-by-step instructions. Here are some notable mentions from the solution deployment.
 
-- We are using Anthos trial period and so can you.
+The main building blocks are
 
-- AlloyDB OMNI is still in Preview stage. It is a good time to experiment and learn while it moves to a GA stage. 
+  - Anthos - Manages clusters across the two clouds and handles Kubernetes application deployments.
+  - AlloyDB - RDBMS across GCP and AWS (using Omni)
+  - Big Query - Analytics datastore using GCP-native setup and external tables with AWS storage.
+  - Supporting components - Load balancers, VPCs that are required for the above.
+  - Optional components - One can use DNS and other services like Apigee at the presentation layer for the application. High-speed low latency connectivity at the backend by deploying GCP Cloud Interconnect or AWS Direct Connnect.
 
-- Provisioning of AlloyDB takes time, about 15-30 minutes. Same is true for Kubernetes on AWS using Anthos. GKE on GCP is very quick.
+The entire infrastructure for this solution can be deployed using Terraform. The application requires additional steps, such as Kubernetes secrets, which are included in the step-by-step instructions. Here are some notable mentions from the solution deployment.
 
-- VPN has some gotchas in terms of single step provisioning because of a cyclic dependecy. This can be avoided using multi-stage deployment.
-
-- Region selection is a tricky if you want to use Anthos and BQ Omni together. Due the different combination, the only regions in US that work for this reference are `us-east4` in GCP and `us-east-1` in AWS and `eastus2` in Azure. If you drop the requirement for Big Query OMNI, more options open up.  See [Big Query Omni Locations](https://cloud.google.com/bigquery/docs/locations#omni-loc) & [Anthos supported regions](https://cloud.google.com/anthos/clusters/docs/multi-cloud/aws/reference/supported-regions) for more details.
+  - We are using Anthos trial period, and so can you.
+  - AlloyDB OMNI is still in the Preview stage. It is an excellent time to experiment and learn while it moves to a GA stage.
+  - Provisioning of AlloyDB takes time, about 15-30 minutes. The same is true for Kubernetes on AWS using Anthos. GKE on GCP is very quick.
+  - VPN has some issues in terms of single-step provisioning because of a cyclic dependency. This can be avoided using multi-stage deployment.
+  - Region selection is tricky if you want to use Anthos and BQ Omni together. Due to the different combinations, the only regions in the US that work for this reference are us-east4 in GCP, us-east-1 in AWS and eastus2 in Azure. If you drop the requirement for Big Query OMNI, more options open up. See Big Query Omni Locations & Anthos supported regions for more details.
 
 
 ## Cost of the solution
-
-This total cost of the Cloud services will be around 1600 USD if you run this for the **whole** month. If you plan to test this for few days, the cost will be significantly lower.
  
- - GCP
- 
- 	- AlloyDB is the most expensive component in this setup. 2 vCPU, 16 GB instance is close to 370 USD a month. If you add two read replicas, it comes to 900 USD in total. You can skip the replicas to save cost. See [AlloyDB pricing](https://cloud.google.com/alloydb/pricing) fo details. 
- 
- 	- Kubernetes comes next with GKE around 200 USD for this test single cluster with 2 nodes.
+This total cost of the Cloud services will be around 1600 USD if you run this for the whole month. The price will be significantly lower if you plan to test this for a few days.
 
- 	- Anthos costs will come to 50 USD a month. Not this is only for the trial of Anthos. You can review [https://cloud.google.com/anthos/pricing/](https://cloud.google.com/anthos/pricing/) for the full details. 
+GCP
 
- 	- The rest are generally low ranging and under 25 USD.
-
-
- - AWS
- 
- 	- On AWS,the cost is mostly around EC2 instances. For the test cases, we need 2 instances for AlloyDB and another 5 instances for Anthos Kubernetes Cluster (3 for control plane and 2 for worker nodes). Assuming `t2.large` for AlloyDB and `t3.medium` for AWS EC2 instances,  it comes to around 525 USD per month.	It is important to note that AWS and GCP is **not** an apples-to-apples comparison.  In case of GCP, you have a far superior Alloy DB setup and it is fully managed by GCP. With AWS, you are running it on EC2 and doing some of the management work. 
-
- 	- The next biggest cost on AWS is the NAT gateway. 
+  - AlloyDB is the most expensive component in this setup. 2 vCPU, 16 GB instance is close to 370 USD a month. If you add two read replicas, it comes to 900 USD in total. You can skip the replicas to save cost. See AlloyDB pricing for details.
+  - Kubernetes comes next with GKE, around 200 USD for this test single cluster with two nodes.
+  - Anthos costs will come to 50 USD a month. Not this is only for the trial of Anthos. You can review https://cloud.google.com/anthos/pricing/ for the full details.
+  - The rest are generally low-ranging and under 25 USD.
  	
- 	- The rest are generally low ranging and under 25 USD.
+AWS
+
+
+  - On AWS, the cost is mainly around EC2 instances. For the test cases, we need two instances for AlloyDB and another five instances for Anthos Kubernetes Cluster (3 for the control plane and 2 for worker nodes). Assuming t2.large for AlloyDB and t3.medium for AWS EC2 instances, it comes to around 525 USD per month. It is important to note that AWS and GCP are not an apples-to-apples comparison. In the case of GCP, you have a far superior Alloy DB setup, and it is fully managed by GCP. With AWS, you are running it on EC2 and doing some of the management work.
+  - The next most significant cost of AWS is the NAT gateway.
+  - The rest are generally low-ranging and under 25 USD.
 
 
 # Future areas to explore
