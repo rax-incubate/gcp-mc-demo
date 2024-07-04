@@ -1,7 +1,8 @@
 # gcp-multi-cloud-demo
 A multi cloud (AWS and GCP) design using Anthos and Alloy DB. 
 
-Presented at ![](png/next-23.jpeg)
+ * Presented at Next 23 - Oct 23
+ * Updates for Rackspace GCP Tribe - July 24
 
 ## Overview
 
